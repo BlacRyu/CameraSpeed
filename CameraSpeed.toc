@@ -1,0 +1,7 @@
+## Interface: 11200
+## Title: Camera Speed
+## Author: OMGparticles
+## Notes: Fine tune how quickly the camera rotates using the mouse.
+## SavedVariables: CameraSpeedDB
+
+CameraSpeed.lua
