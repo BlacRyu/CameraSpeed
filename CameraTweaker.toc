@@ -4,4 +4,4 @@
 ## Notes: Fine tune how quickly the camera rotates using the mouse.
 ## SavedVariables: CameraSpeedDB
 
-CameraSpeed.lua
+CameraSpeed.xml

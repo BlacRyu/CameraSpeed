@@ -1,7 +1,19 @@
+--
+-- CameraSpeed AddOn created by OMGparticles, Copyright 2023 
+-- 
+-- Adjusts camera sensitivity in both the horizontal and vertical directions.
+-- 
+--
+-- Feel free to modify, extend and redistribute this AddOn as you see fit.
+--
+
+
+-- Helper function for displaying local messages in the chat window
 local function printChat(msg)
     DEFAULT_CHAT_FRAME:AddMessage(msg)
 end
 
+-- Reload all addons with /rl (mainly for development and debugging)
 SLASH_RELOAD1 = '/rl'
 function SlashCmdList.RELOAD(msg, editbox) ReloadUI() end
 
@@ -17,6 +29,7 @@ LoadConfig:SetScript("OnEvent", function()
     end
 end)
 
+-- Apply any changed speed values to the game camera.
 function Apply()
     if not CameraSpeedDB then
         return
@@ -33,6 +46,13 @@ end
 
 SLASH_CAMSPEED1, SLASH_CAMSPEED2 = "/camspeed", "/cs"
 SlashCmdList["CAMSPEED"] = function(input)
+    
+    -- Open the interface
+    if (input == "" or input == nil) then
+        ShowUIPanel(CameraSpeedOptionsPanel)
+        return
+    end
+
     local iStart, iEnd = strfind(input, "[^%s]+")
     local str1 = strsub(input, iStart or 0, iEnd or 0)
     iStart, iEnd = strfind(input, "[^%s]+", string.len(str1)+2)
@@ -41,6 +61,7 @@ SlashCmdList["CAMSPEED"] = function(input)
     -- /cs <number>
     if (tonumber(str1)) then
         CameraSpeedDB.yawSpeed = tonumber(str1)
+        CameraSpeedDB.pitchSpeed = tonumber(str1)
 
     -- /cs yaw <number>
     elseif (str1 == "yaw" and tonumber(str2)) then
