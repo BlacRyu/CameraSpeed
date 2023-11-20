@@ -1,5 +1,5 @@
 --
--- CameraSpeed AddOn created by OMGparticles, Copyright 2023 
+-- CameraTweaker AddOn created by OMGparticles, Copyright 2023 
 -- 
 -- Adjusts camera sensitivity in both the horizontal and vertical directions.
 -- 
@@ -21,35 +21,35 @@ function SlashCmdList.RELOAD(msg, editbox) ReloadUI() end
 LoadConfig=CreateFrame("frame")
 LoadConfig:RegisterEvent("ADDON_LOADED")
 LoadConfig:SetScript("OnEvent", function()
-    if arg1 == "CameraSpeed" then
-        -- printChat("loading CameraSpeed")
-        CameraSpeedDB = CameraSpeedDB or {}
-        CameraSpeedDB.yawSpeed = CameraSpeedDB.yawSpeed or GetCVar("cameraYawMoveSpeed")
-        CameraSpeedDB.pitchSpeed = CameraSpeedDB.pitchSpeed or GetCVar("cameraPitchMoveSpeed")
+    if arg1 == "CameraTweaker" then
+        -- printChat("loading CameraTweaker")
+        CameraTweakerDB = CameraTweakerDB or {}
+        CameraTweakerDB.yawSpeed = CameraTweakerDB.yawSpeed or GetCVar("cameraYawMoveSpeed")
+        CameraTweakerDB.pitchSpeed = CameraTweakerDB.pitchSpeed or GetCVar("cameraPitchMoveSpeed")
     end
 end)
 
 -- Apply any changed speed values to the game camera.
 function Apply()
-    if not CameraSpeedDB then
+    if not CameraTweakerDB then
         return
     end
-    if (CameraSpeedDB.yawSpeed ~= GetCVar("cameraYawMoveSpeed")) then
-        SetCVar("cameraYawMoveSpeed", CameraSpeedDB.yawSpeed)
-        printChat("Camera horizontal speed set to " .. CameraSpeedDB.yawSpeed .. ". Default is 180")
+    if (CameraTweakerDB.yawSpeed ~= GetCVar("cameraYawMoveSpeed")) then
+        SetCVar("cameraYawMoveSpeed", CameraTweakerDB.yawSpeed)
+        printChat("Camera horizontal speed set to " .. CameraTweakerDB.yawSpeed .. ". Default is 180")
     end
-    if (CameraSpeedDB.pitchSpeed ~= GetCVar("cameraPitchMoveSpeed")) then
-        SetCVar("cameraPitchMoveSpeed", CameraSpeedDB.pitchSpeed)
-        printChat("Camera vertical speed set to " .. CameraSpeedDB.pitchSpeed .. ". Default is 90")
+    if (CameraTweakerDB.pitchSpeed ~= GetCVar("cameraPitchMoveSpeed")) then
+        SetCVar("cameraPitchMoveSpeed", CameraTweakerDB.pitchSpeed)
+        printChat("Camera vertical speed set to " .. CameraTweakerDB.pitchSpeed .. ". Default is 90")
     end
 end
 
-SLASH_CAMSPEED1, SLASH_CAMSPEED2 = "/camspeed", "/cs"
+SLASH_CAMSPEED1, SLASH_CAMSPEED2 = "/camtweaker", "/cam"
 SlashCmdList["CAMSPEED"] = function(input)
     
     -- Open the interface
     if (input == "" or input == nil) then
-        ShowUIPanel(CameraSpeedOptionsPanel)
+        ShowUIPanel(CameraTweakerOptionsPanel)
         return
     end
 
@@ -58,32 +58,32 @@ SlashCmdList["CAMSPEED"] = function(input)
     iStart, iEnd = strfind(input, "[^%s]+", string.len(str1)+2)
     local str2 = strsub(input, iStart or 0, iEnd or 0)
 
-    -- /cs <number>
+    -- /cam <number>
     if (tonumber(str1)) then
-        CameraSpeedDB.yawSpeed = tonumber(str1)
-        CameraSpeedDB.pitchSpeed = tonumber(str1)
+        CameraTweakerDB.yawSpeed = tonumber(str1)
+        CameraTweakerDB.pitchSpeed = tonumber(str1)
 
-    -- /cs yaw <number>
+    -- /cam yaw <number>
     elseif (str1 == "yaw" and tonumber(str2)) then
-        CameraSpeedDB.yawSpeed = tonumber(str2)
+        CameraTweakerDB.yawSpeed = tonumber(str2)
 
-    -- /cs pitch <number>
+    -- /cam pitch <number>
     elseif (str1 == "pitch" and tonumber(str2)) then
-        CameraSpeedDB.pitchSpeed = str2
+        CameraTweakerDB.pitchSpeed = str2
 
     -- anything else
     else
-        printChat("|cff00FF67CameraSpeed: |cff7AFFFF/cs <value> or /cs yaw <value> - Horizontal speed")
-        printChat("|cff00FF67Current: |cffFFFFFF" .. CameraSpeedDB.yawSpeed .." |cff00FF67Default: |cffFF8888180")
-        printChat("|cff00FF67CameraSpeed: |cff7AFFFF/cs pitch <value> - Vertical speed")
-        printChat("|cff00FF67Current: |cffFFFFFF" .. CameraSpeedDB.pitchSpeed .." |cff00FF67Default: |cffFF888890")
+        printChat("|cff00FF67CameraTweaker: |cff7AFFFF/cs <value> or /cs yaw <value> - Horizontal speed")
+        printChat("|cff00FF67Current: |cffFFFFFF" .. CameraTweakerDB.yawSpeed .." |cff00FF67Default: |cffFF8888180")
+        printChat("|cff00FF67CameraTweaker: |cff7AFFFF/cs pitch <value> - Vertical speed")
+        printChat("|cff00FF67Current: |cffFFFFFF" .. CameraTweakerDB.pitchSpeed .." |cff00FF67Default: |cffFF888890")
     end
     Apply()
 end
 
 -- Apply settings when player enters the world
-CameraSpeed = CreateFrame("Frame")
-CameraSpeed:RegisterEvent("PLAYER_ENTERING_WORLD")
-CameraSpeed:SetScript("OnEvent", function()
+CameraTweaker = CreateFrame("Frame")
+CameraTweaker:RegisterEvent("PLAYER_ENTERING_WORLD")
+CameraTweaker:SetScript("OnEvent", function()
     Apply()
 end)
