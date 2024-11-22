@@ -1,7 +1,7 @@
 ## Interface: 11200
-## Title: Camera Speed
+## Title: Camera Tweaker
 ## Author: OMGparticles
 ## Notes: Fine tune how quickly the camera rotates using the mouse.
-## SavedVariables: CameraSpeedDB
+## SavedVariables: CameraTweakerDB
 
-CameraSpeed.xml
+CameraTweaker.lua

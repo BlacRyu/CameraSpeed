@@ -34,48 +34,49 @@ function Apply()
     if not CameraTweakerDB then
         return
     end
-    if (CameraTweakerDB.yawSpeed ~= GetCVar("cameraYawMoveSpeed")) then
-        SetCVar("cameraYawMoveSpeed", CameraTweakerDB.yawSpeed)
-        printChat("Camera horizontal speed set to " .. CameraTweakerDB.yawSpeed .. ". Default is 180")
+    local oldYaw = tonumber(GetCVar("cameraYawMoveSpeed"))
+    local newYaw = CameraTweakerDB.yawSpeed
+    local oldPitch = tonumber(GetCVar("cameraPitchMoveSpeed"))
+    local newPitch = CameraTweakerDB.pitchSpeed
+    if (oldYaw ~= newYaw) then
+        SetCVar("cameraYawMoveSpeed", newYaw)
+        printChat("Horizontal camera speed changed from " .. oldYaw .. " to " .. newYaw .. ". Default is 180")
     end
-    if (CameraTweakerDB.pitchSpeed ~= GetCVar("cameraPitchMoveSpeed")) then
-        SetCVar("cameraPitchMoveSpeed", CameraTweakerDB.pitchSpeed)
-        printChat("Camera vertical speed set to " .. CameraTweakerDB.pitchSpeed .. ". Default is 90")
+    if (oldPitch ~= newPitch) then
+        SetCVar("cameraPitchMoveSpeed", newPitch)
+        printChat("Vertical camera speed changed from " .. oldPitch .. " to " .. newPitch .. ". Default is 90")
     end
 end
 
-SLASH_CAMSPEED1, SLASH_CAMSPEED2 = "/camtweaker", "/cam"
-SlashCmdList["CAMSPEED"] = function(input)
+SLASH_CAMTWEAK1, SLASH_CAMTWEAK2, SLASH_CAMTWEAK3, SLASH_CAMTWEAK4, SLASH_CAMTWEAK5 = "/cameratweaker", "/cam", "/ct", "/camtweaker", "/camtweak"
+SlashCmdList["CAMTWEAK"] = function(input)
     
     -- Open the interface
-    if (input == "" or input == nil) then
-        ShowUIPanel(CameraTweakerOptionsPanel)
-        return
-    end
+    -- if (input == "" or input == nil) then
+    --     ShowUIPanel(CameraTweakerOptionsPanel)
+    --     return
+    -- end
 
     local iStart, iEnd = strfind(input, "[^%s]+")
     local str1 = strsub(input, iStart or 0, iEnd or 0)
     iStart, iEnd = strfind(input, "[^%s]+", string.len(str1)+2)
     local str2 = strsub(input, iStart or 0, iEnd or 0)
 
-    -- /cam <number>
-    if (tonumber(str1)) then
+    local yawStrings = {y=true, yaw=true, h=true, horizontal=true}
+    local pitchStrings = {p=true, pitch=true, v=true, vertical=true}
+
+    if (tonumber(str1)) then -- /cam <number>
         CameraTweakerDB.yawSpeed = tonumber(str1)
-        CameraTweakerDB.pitchSpeed = tonumber(str1)
-
-    -- /cam yaw <number>
-    elseif (str1 == "yaw" and tonumber(str2)) then
+    elseif (yawStrings[str1] and tonumber(str2)) then -- /cam yaw <number>
         CameraTweakerDB.yawSpeed = tonumber(str2)
-
-    -- /cam pitch <number>
-    elseif (str1 == "pitch" and tonumber(str2)) then
-        CameraTweakerDB.pitchSpeed = str2
+    elseif (pitchStrings[str1] and tonumber(str2)) then -- /cam pitch <number>
+        CameraTweakerDB.pitchSpeed = tonumber(str2)
 
     -- anything else
     else
-        printChat("|cff00FF67CameraTweaker: |cff7AFFFF/cs <value> or /cs yaw <value> - Horizontal speed")
+        printChat("|cff00FF67CameraTweaker: |cff7AFFFF/cam <value> or /cam yaw <value> - Horizontal speed")
         printChat("|cff00FF67Current: |cffFFFFFF" .. CameraTweakerDB.yawSpeed .." |cff00FF67Default: |cffFF8888180")
-        printChat("|cff00FF67CameraTweaker: |cff7AFFFF/cs pitch <value> - Vertical speed")
+        printChat("|cff00FF67CameraTweaker: |cff7AFFFF/cam pitch <value> - Vertical speed")
         printChat("|cff00FF67Current: |cffFFFFFF" .. CameraTweakerDB.pitchSpeed .." |cff00FF67Default: |cffFF888890")
     end
     Apply()
